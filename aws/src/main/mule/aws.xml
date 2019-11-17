@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:s3="http://www.mulesoft.org/schema/mule/s3" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="745932c1-fdf1-4e22-842f-d2dfad78870b" >
+		<http:listener-connection host="${http.host}" port="${http.port}" />
+	</http:listener-config>
+	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="ceaaa881-949c-4377-8134-16507944333a" >
+		<s3:basic-connection accessKey="AKIAJWKZDPLHRO4WPP7A" secretKey="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" region="US_EAST_2"/>
+	</s3:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="91e22fc0-6e69-4974-a07f-88f9ec6fc799" file="config/config-local.yaml" />
+	<flow name="aws" doc:id="009cad63-734b-41ec-b95e-9e95e64f2ae2" >
+		<http:listener doc:name="Listener" doc:id="05cbf6a9-8396-43a3-b264-f69faeb347ff" config-ref="HTTP_Listener_config" path="${http.path}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3652e776-485e-4540-b753-b43becc8c5a7" message="Flow started------- #[payload]"/>
+		<s3:get-object doc:name="Get object" doc:id="85da202f-1609-4fa3-bc87-41e09db9348f" config-ref="Amazon_S3_Configuration" bucketName="mybucket-saranya" key="saranya.txt"/>
+		<logger level="INFO" doc:name="Logger" doc:id="309262b5-872d-400f-9b5c-dcedac3c14d4" message="flow ended-----#[payload]"/>
+	</flow>
+</mule>
